@@ -1,3 +1,0 @@
-img = imread('C:\Users\danie\Downloads\Image Set\DIP3E_Original_Images_CH09\Fig0944(a)(calculator).tif');
-img2reduced = imresize(img, 
-imshow(img);
