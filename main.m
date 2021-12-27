@@ -44,5 +44,5 @@ end
 % Actual conversion from decimal ASCII values to binary 
 img2reduced = imresize(img, sizeval);
 % imshow(img2reduced);
-imshow(binarray);
+% imshow(binarray);
 toc
