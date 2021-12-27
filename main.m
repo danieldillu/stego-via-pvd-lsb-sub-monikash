@@ -1,7 +1,9 @@
 clc;
 clear all;
 tic
-img = imread('C:\Users\danie\Downloads\Image Set\DIP3E_Original_Images_CH09\Fig0944(a)(calculator).tif');
+PRootURL = 'C:\Users\danie\OneDrive\Documents\DIP Projects Others\Monika Sharma DIP Project\algo';
+ImageURL = strcat(PRootURL,'\images\','DIP3E_Original_Images_CH06\Fig0631(a)(strawberries_coffee_full_color).tif');
+img = imread(ImageURL);
 sizeval = [567, 680];
 stegoText = 'This is a test image';
 sz = length(stegoText);
@@ -11,9 +13,6 @@ sz = length(stegoText);
 
 maxbit = 0; minbit = 256;
 for j=1:sz
-    if (int16(stegoText(j))==32)
-        int16(stegoText(j))
-    end
     if length(de2bi(int16(stegoText(j))))>maxbit
         maxbit = length(de2bi(int16(stegoText(j))));
     end
@@ -39,9 +38,9 @@ for i=1:sz;
         binarray(i,j) = bintemp(k);
         j=j+1;
         k=k+1;
-    end 
+    end
 end
-% Actual conversion from decimal ASCII values to binary 
+% Actual conversion from decimal ASCII values to binary
 img2reduced = imresize(img, sizeval);
 % imshow(img2reduced);
 % imshow(binarray);
