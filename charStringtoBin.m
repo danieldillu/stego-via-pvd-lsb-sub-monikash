@@ -14,11 +14,7 @@ end
 % To find the maximum and minimum bits of the characters being entered as
 % Stego Text
 binarray = zeros(sz,maxbit);
-for i=1:maxbit;
-    for j=1:sz;
-        binarray(j,i) = 4;
-    end
-end
+binarray (binarray==0)=4;
 % Initialise a number other than 0 and 1 in array, to identify whether it
 % is a bit. Here we took it as 4.
 for i=1:sz;

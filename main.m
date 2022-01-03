@@ -23,43 +23,53 @@ dimenGrayImg = size(graysImg);
 % as Grayscale.
 % ------------------------------Quantization----
 % nonOverlappingBlockWithDiff
-blocksize = dimenGrayImg(1)*(dimenGrayImg(2)/2);
+blocksize = dimenGrayImg(1)*(round(dimenGrayImg(2)/3));
 k=1; nonOverlappingBlockWithDiff = zeros(blocksize ,5);
 for i=1:dimenGrayImg(1)
     if mod(i,2)~=0
-        for j=1:2:dimenGrayImg(2)
-            tempi = graysImg(i,j);
-            tempip1 = graysImg(i,j+1);
+        for j=2:2:dimenGrayImg(2)-1
+            gltpix = graysImg(i,j-1);
+            gctpix = graysImg(i,j);
+            grtpix = graysImg(i,j+1);
             nonOverlappingBlockWithDiff(k,1) = i;
             nonOverlappingBlockWithDiff(k,2) = j;
-            nonOverlappingBlockWithDiff(k,3) = graysImg(i,j);
-            nonOverlappingBlockWithDiff(k,4) =  graysImg(i,j+1);            
-            if tempi > tempip1
-                nonOverlappingBlockWithDiff(k,5) = (tempi - tempip1);
+            nonOverlappingBlockWithDiff(k,3) = graysImg(i,j-1);
+            nonOverlappingBlockWithDiff(k,4) = graysImg(i,j);
+            nonOverlappingBlockWithDiff(k,5) = graysImg(i,j+1);
+            if gltpix > gctpix
+                nonOverlappingBlockWithDiff(k,6) = (gltpix - gctpix);
             else
-                nonOverlappingBlockWithDiff(k,5) = tempip1- tempi;
+                nonOverlappingBlockWithDiff(k,6) = gctpix- gltpix;
             end
         %       To get a absolute of the difference becoz for negative value it is
         %       taking zero instead of any number.
             k=k+1;
         end
     else
-        for j=dimenGrayImg(2):-2:1
-            tempi = graysImg(i,j);
-            tempip1 = graysImg(i,j-1);
+% % %         Please check for the issue it not working fine.
+        for j=dimenGrayImg(2)-1:-2:2
+            gltpix = graysImg(i,j+1);
+            gctpix = graysImg(i,j);
+            grtpix = graysImg(i,j-1);
             nonOverlappingBlockWithDiff(k,1) = i;
             nonOverlappingBlockWithDiff(k,2) = j;
-            nonOverlappingBlockWithDiff(k,3) = graysImg(i,j);
-            nonOverlappingBlockWithDiff(k,4) =  graysImg(i,j-1);
-            if tempi > tempip1
-                nonOverlappingBlockWithDiff(k,5) = (tempi - tempip1);
+            nonOverlappingBlockWithDiff(k,3) = graysImg(i,j+1);
+            nonOverlappingBlockWithDiff(k,4) = graysImg(i,j);
+            nonOverlappingBlockWithDiff(k,5) = graysImg(i,j-1);
+            if gltpix > gctpix
+                nonOverlappingBlockWithDiff(k,6) = (gltpix - gctpix);
             else
-                nonOverlappingBlockWithDiff(k,5) = tempip1- tempi;
+                nonOverlappingBlockWithDiff(k,6) = gctpix - gltpix;
             end
         %       To get a absolute of the difference becoz for negative value it is
         %       taking zero instead of any number.
             k=k+1;
-        end        
+        end  
+        if k>blocksize
+            disp('Iterator exited due some problem');
+            k 
+           break ;
+        end
     end
 end
 
