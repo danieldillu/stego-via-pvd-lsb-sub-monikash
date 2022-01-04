@@ -1,4 +1,4 @@
-function [ binarray ] = charStringtoBin( stegoText )
+function [ binarystring ] = charStringtoBin( stegoText )
 %charStringtoBin convert string of characters to binary returns a 2D array
 %   It takes a input of String of charcacters, traverses the characters and
 %   converts to binary in row-wise. It should be noted that the bit length
@@ -27,4 +27,6 @@ for i=1:sz;
         k=k+1;
     end
 end
+binarystring = binarray(:);
+binarystring (binarystring==4)=0;
 end
