@@ -25,6 +25,10 @@ dimenGrayImg = size(graysImg);
 % nonOverlappingBlockWithDiff
 blocksize = dimenGrayImg(1)*(round(dimenGrayImg(2)/3));
 k=1; nonOverlappingBlockWithDiff = zeros(blocksize ,5);
+rangeMat = [0 31 round(log2(31-0)-2);
+    32 255 round(log2(255-32)-3)];
+% 1st 2 columns are lower and upper range, 3rd is the log calculation of
+% li-ui
 for i=1:dimenGrayImg(1)
     if mod(i,2)~=0
         for j=2:3:(dimenGrayImg(2)-1)
@@ -41,6 +45,27 @@ for i=1:dimenGrayImg(1)
             else
                 nonOverlappingBlockWithDiff(k,6) = gctpix- gltpix;
             end
+            % --------------------
+            
+            diffLC = nonOverlappingBlockWithDiff(k,6);
+            if (diffLC >= rangeMat(1,1))&&(diffLC <= rangeMat(1,2)) %% 7
+                t1 = rangeMat(1,3);
+                t2 = rangeMat(1,3);
+                rmd1 = mod(gltpix,8);
+                rmd2 = mod(gctpix,8);
+%         -->>>> continue here step 4.        
+            elseif (diffLC >= rangeMat(2,1))&&(diffLC <= rangeMat(2,2))  %% 35
+                t1 = rangeMat(2,3);
+                t2 = rangeMat(2,3);
+                rmd1 = mod(gltpix,16);
+                rmd2 = mod(gctpix,16);
+            else
+                disp('Na Chal raha...');
+                k
+                return;
+            end
+            
+            % -------------------------------
             k=k+1;
         end
     else
@@ -59,7 +84,7 @@ for i=1:dimenGrayImg(1)
                 nonOverlappingBlockWithDiff(k,6) = gctpix - gltpix;
             end
             k=k+1;
-        end  
+        end
     end
 end
 
