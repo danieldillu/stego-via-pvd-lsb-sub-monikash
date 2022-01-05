@@ -29,6 +29,9 @@ rangeMat = [0 31 round(log2(31-0)-2);
     32 255 round(log2(255-32)-3)];
 % 1st 2 columns are lower and upper range, 3rd is the log calculation of
 % li-ui
+
+iter4bin = [1 1;1 1]; % to keep track of the t1 and t2 values not exceeding the actual length [L|t1 U|t1;L|t2 U|t2]
+
 for i=1:dimenGrayImg(1)
     if mod(i,2)~=0
         for j=2:3:(dimenGrayImg(2)-1)
@@ -53,7 +56,17 @@ for i=1:dimenGrayImg(1)
                 t2 = rangeMat(1,3);
                 rmd1 = mod(gltpix,8);
                 rmd2 = mod(gctpix,8);
-%         -->>>> continue here step 4.        
+                dno1 = zerows(t1);
+                dno2 = zerows(t2);
+                if iter4bin(1,2) > length(str2binary) || iter4bin(2,2) > length(str2binary)
+                    return;
+                end
+                iter4bin(1,2)= iter4bin(1,2) + t1
+                iter4bin(2,2)= iter4bin(2,2) + t2 
+                dno1 = bi2de(str2binary(iter4bin(1,1):iter4bin(1,2))); %% Error! 
+                dno2 = bi2de(str2binary(iter4bin(2,1):iter4bin(2,2))); %% Error! 
+                iter4bin(1,1) = iter4bin(1,1) + 1;
+                iter4bin(2,1) = iter4bin(2,1) + 1;
             elseif (diffLC >= rangeMat(2,1))&&(diffLC <= rangeMat(2,2))  %% 35
                 t1 = rangeMat(2,3);
                 t2 = rangeMat(2,3);
