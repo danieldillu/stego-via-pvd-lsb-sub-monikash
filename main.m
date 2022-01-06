@@ -35,6 +35,9 @@ iter4bin = [1 1;1 1]; % to keep track of the t1 and t2 values not exceeding the 
 for i=1:dimenGrayImg(1)
     if mod(i,2)~=0
         for j=2:3:(dimenGrayImg(2)-1)
+%             if iter4bin(1,2) > length(str2binary) || iter4bin(2,2) > length(str2binary)
+%                 return; %% It is related to if block below
+%             end
             gltpix = graysImg(i,j-1);
             gctpix = graysImg(i,j);
             grtpix = graysImg(i,j+1);
@@ -60,13 +63,16 @@ for i=1:dimenGrayImg(1)
                 dno2 = zerows(t2);
                 if iter4bin(1,2) > length(str2binary) || iter4bin(2,2) > length(str2binary)
                     return;
+                else
+                iter4bin(1,2)= iter4bin(1,2) + t1 ; %After t1 bits.
+                iter4bin(2,2)= iter4bin(2,2) + t2 ; %After t2 bits.
+                disp(iter4bin(2,2));
+                dno1 = bi2de(str2binary(iter4bin(1,1):iter4bin(1,2))); %% Error!
+                dno2 = bi2de(str2binary(iter4bin(2,1):iter4bin(2,2))); %% Error!
+                
+                iter4bin(1,1) = iter4bin(1,2) + 1;
+                iter4bin(2,1) = iter4bin(2,2) + 1;
                 end
-                iter4bin(1,2)= iter4bin(1,2) + t1
-                iter4bin(2,2)= iter4bin(2,2) + t2 
-                dno1 = bi2de(str2binary(iter4bin(1,1):iter4bin(1,2))); %% Error! 
-                dno2 = bi2de(str2binary(iter4bin(2,1):iter4bin(2,2))); %% Error! 
-                iter4bin(1,1) = iter4bin(1,1) + 1;
-                iter4bin(2,1) = iter4bin(2,1) + 1;
             elseif (diffLC >= rangeMat(2,1))&&(diffLC <= rangeMat(2,2))  %% 35
                 t1 = rangeMat(2,3);
                 t2 = rangeMat(2,3);
@@ -74,7 +80,6 @@ for i=1:dimenGrayImg(1)
                 rmd2 = mod(gctpix,16);
             else
                 disp('Na Chal raha...');
-                k
                 return;
             end
             
@@ -100,5 +105,4 @@ for i=1:dimenGrayImg(1)
         end
     end
 end
-
 toc
