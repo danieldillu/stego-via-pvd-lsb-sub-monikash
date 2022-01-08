@@ -121,14 +121,17 @@ elseif gLstr > 255 || gCstr > 255
     gLstr = gLstr - power(2,t);
     gCstr = gCstr - power(2,t);
 else
-%     no need this;    
+    %     no need this;
 end
 
 % PDMO ends
 
 % APVD starts.
 gAVG = (gLstr + gCstr)/2;
+% % %  PVD strts
 
+% % %  PVD ends
+% APVD ends.
 % ---------------------------------------------------
 
 toc;
