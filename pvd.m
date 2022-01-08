@@ -10,7 +10,7 @@ RANGETAB = [0 7 3;
     128 255 7];
 sze = size(RANGETAB);
 % R1=[0 7] Capacity n = 3
-d = abs(gt1,gt2);
+d = abs(gt1-gt2);
 rangeLcurrent = -1; rangeUcurrent = -1; capNcrnt = -12;
 for i = 1:sze(1)
     if belongsin(d,RANGETAB(i,1),RANGETAB(i,2))
@@ -38,5 +38,6 @@ elseif g1 < g2 && dNEW <= d
 else
     disp('Check PVD function, there is something wrong here');
 end
+
 end
 
