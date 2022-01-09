@@ -1,0 +1,323 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Pixel Difference Modulo Operation phase</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-01-09"><meta name="DC.source" content="pdmo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Pixel Difference Modulo Operation phase</h1><p>It function defined as per the paper of Aditya Kumar et.al.</p><pre class="codeinput"><span class="keyword">function</span> [ gLstr,gCstr,gR,endpt ] = pdmo( gL,gC,gR,rangeMat,str2binary,startptofstr )
+<span class="comment">% pdmo() it applies the Pixel Difference Modulo Operation phase.</span>
+<span class="comment">%   pdmo() takes inputs as 3 pixels values gL,gC,gR; Range Matrix, 1D array</span>
+<span class="comment">%   of binary message string, str2binary; and Starting Point of Binary</span>
+<span class="comment">%   String.</span>
+dLC = abs(gL - gC);
+t = rangeMat(1,3);
+t1 = t;
+t2 = t;
+<span class="keyword">if</span> belongsin(dLC,rangeMat(1,1),rangeMat(1,2))
+    rmd1 = mod(gL,8);
+<span class="keyword">elseif</span> belongsin(dLC,rangeMat(2,1),rangeMat(2,2))
+    rmd1 = mod(gL,16);
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> belongsin(dLC,rangeMat(1,1),rangeMat(1,2))
+    rmd2 = mod(gC,8);
+<span class="keyword">elseif</span> belongsin(dLC,rangeMat(2,1),rangeMat(2,2))
+    rmd2 = mod(gC,16);
+<span class="keyword">end</span>
+
+[str1,endpt] = pickAMsgportion(str2binary,startptofstr,t1);
+startptofstr = endpt;
+[str2,endpt] = pickAMsgportion(str2binary,startptofstr,t2);
+
+d1 = binaryArray2Int( str1 );
+d2 = binaryArray2Int( str2 );
+
+dv1 = rmd1 - d1;
+dv2 = d1 - rmd1;
+dv3 = rmd2 - d2;
+dv4 = d2 - rmd2;
+
+<span class="comment">% gLdash</span>
+
+<span class="keyword">if</span> rmd1 == d1
+    gLdash = gL;
+<span class="keyword">elseif</span> rmd1 &lt; d1 &amp;&amp; abs(dv1) &lt; power(2,t-1)
+    gLdash = gL - dv1;
+<span class="keyword">elseif</span> rmd1 &gt; d1 &amp;&amp; abs(dv2) &lt; power(2,t-1)
+    gLdash = gL + dv2;
+<span class="keyword">elseif</span> rmd1 &lt; d1 &amp;&amp; abs(dv1) &gt;= power(2,t-1)
+    e = power(2,t)+dv1;
+    gLdash = gL - e;
+<span class="keyword">elseif</span> rmd1 &gt; d1 &amp;&amp; abs(dv2) &gt;= power(2,t-1)
+    e = power(2,t)+dv2;
+    gLdash = gL + e;
+<span class="keyword">else</span>
+    disp(<span class="string">'Something wrong on line 62 of function'</span>);
+<span class="keyword">end</span>
+
+<span class="comment">% for gCdash</span>
+
+<span class="keyword">if</span> rmd2 == d2
+    gCdash = gC;
+<span class="keyword">elseif</span> rmd2 &lt; d2 &amp;&amp; abs(dv3) &lt; power(2,t-1)
+    gCdash = gC - dv3;
+<span class="keyword">elseif</span> rmd2 &gt; d2 &amp;&amp; abs(dv4) &lt; power(2,t-1)
+    gCdash = gC + dv4;
+<span class="keyword">elseif</span> rmd2 &lt; d2 &amp;&amp; abs(dv3) &gt;= power(2,t-1)
+    ee = power(2,t) + dv3;
+    gCdash = gC - ee;
+<span class="keyword">elseif</span> rmd2 &gt; d2 &amp;&amp; abs(dv4) &gt;= power(2,t-1)
+    ee = power(2,t) + dv4;
+    gCdash = gC + ee;
+<span class="keyword">else</span>
+    disp(<span class="string">'Something wrong on line in gCdash block of function'</span>);
+<span class="keyword">end</span>
+<span class="comment">% for gCstr , gLstr</span>
+
+dLCdash = abs(gLdash - gCdash);
+
+<span class="keyword">if</span> belongsin(dLC,rangeMat(1,1),rangeMat(1,2))
+    <span class="comment">%     Take eqn 26r</span>
+    <span class="keyword">if</span> belongsin(dLCdash,rangeMat(1,1),rangeMat(1,2))
+        gLstr = gLdash;
+        gCstr = gCdash;
+    <span class="keyword">elseif</span> belongsin(dLCdash,rangeMat(2,1),rangeMat(2,2)) &amp;&amp; gLdash &gt;= gCdash
+        gLstr = gLdash - power(2,t);
+        gCstr = gCdash + power(2,t);
+    <span class="keyword">elseif</span> belongsin(dLCdash,rangeMat(2,1),rangeMat(2,2)) &amp;&amp; gLdash &lt; gCdash
+        gLstr = gLdash + power(2,t);
+        gCstr = gCdash - power(2,t);
+    <span class="keyword">else</span>
+        disp(<span class="string">'Something wrong on line in gCstr , gLstr block of function'</span>);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="keyword">if</span> belongsin(dLC,rangeMat(2,1),rangeMat(2,2))
+    <span class="keyword">if</span> belongsin(dLCdash,rangeMat(2,1),rangeMat(2,2))
+        gLstr = gLdash;
+        gCstr = gCdash;
+    <span class="keyword">elseif</span> belongsin(dLCdash,rangeMat(1,1),rangeMat(1,2)) &amp;&amp; gLdash &gt;= gCdash
+        gLstr = gLdash + power(2,t);
+        gCstr = gCdash - power(2,t);
+    <span class="keyword">elseif</span> belongsin(dLCdash,rangeMat(1,1),rangeMat(1,2)) &amp;&amp; gLdash &lt; gCdash
+        gLstr = gLdash - power(2,t);
+        gCstr = gCdash + power(2,t);
+    <span class="keyword">else</span>
+        disp(<span class="string">'Something wrong on line in gCstr , gLstr block of function'</span>);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> gLstr &lt; 0 &amp;&amp; gCstr &lt; 0
+    gLstr = gLstr + power(2,t);
+    gCstr = gCstr + power(2,t);
+<span class="keyword">end</span>
+<span class="keyword">if</span> gLstr &gt; 255 || gCstr &gt; 255
+    gLstr = gLstr - power(2,t);
+    gCstr = gCstr - power(2,t);
+<span class="keyword">end</span>
+
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">
+gLstr =
+
+   131
+
+
+gCstr =
+
+   124
+
+
+gR =
+
+   123
+
+
+endpt =
+
+     5
+
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Pixel Difference Modulo Operation phase
+% It function defined as per the paper of Aditya Kumar et.al.
+
+function [ gLstr,gCstr,gR,endpt ] = pdmo( gL,gC,gR,rangeMat,str2binary,startptofstr )
+% pdmo() it applies the Pixel Difference Modulo Operation phase.
+%   pdmo() takes inputs as 3 pixels values gL,gC,gR; Range Matrix, 1D array
+%   of binary message string, str2binary; and Starting Point of Binary
+%   String.
+dLC = abs(gL - gC);
+t = rangeMat(1,3);
+t1 = t;
+t2 = t;
+if belongsin(dLC,rangeMat(1,1),rangeMat(1,2))
+    rmd1 = mod(gL,8);
+elseif belongsin(dLC,rangeMat(2,1),rangeMat(2,2))
+    rmd1 = mod(gL,16);
+end
+
+if belongsin(dLC,rangeMat(1,1),rangeMat(1,2))
+    rmd2 = mod(gC,8);
+elseif belongsin(dLC,rangeMat(2,1),rangeMat(2,2))
+    rmd2 = mod(gC,16);
+end
+
+[str1,endpt] = pickAMsgportion(str2binary,startptofstr,t1);
+startptofstr = endpt;
+[str2,endpt] = pickAMsgportion(str2binary,startptofstr,t2);
+
+d1 = binaryArray2Int( str1 );
+d2 = binaryArray2Int( str2 );
+
+dv1 = rmd1 - d1;
+dv2 = d1 - rmd1;
+dv3 = rmd2 - d2;
+dv4 = d2 - rmd2;
+
+% gLdash
+
+if rmd1 == d1
+    gLdash = gL;
+elseif rmd1 < d1 && abs(dv1) < power(2,t-1)
+    gLdash = gL - dv1;
+elseif rmd1 > d1 && abs(dv2) < power(2,t-1)
+    gLdash = gL + dv2;
+elseif rmd1 < d1 && abs(dv1) >= power(2,t-1)
+    e = power(2,t)+dv1;
+    gLdash = gL - e;
+elseif rmd1 > d1 && abs(dv2) >= power(2,t-1)
+    e = power(2,t)+dv2;
+    gLdash = gL + e;
+else
+    disp('Something wrong on line 62 of function');
+end
+
+% for gCdash
+
+if rmd2 == d2
+    gCdash = gC;
+elseif rmd2 < d2 && abs(dv3) < power(2,t-1)
+    gCdash = gC - dv3;
+elseif rmd2 > d2 && abs(dv4) < power(2,t-1)
+    gCdash = gC + dv4;
+elseif rmd2 < d2 && abs(dv3) >= power(2,t-1)
+    ee = power(2,t) + dv3;
+    gCdash = gC - ee;
+elseif rmd2 > d2 && abs(dv4) >= power(2,t-1)
+    ee = power(2,t) + dv4;
+    gCdash = gC + ee;
+else
+    disp('Something wrong on line in gCdash block of function');
+end
+% for gCstr , gLstr
+
+dLCdash = abs(gLdash - gCdash);
+
+if belongsin(dLC,rangeMat(1,1),rangeMat(1,2))
+    %     Take eqn 26r
+    if belongsin(dLCdash,rangeMat(1,1),rangeMat(1,2))
+        gLstr = gLdash;
+        gCstr = gCdash;
+    elseif belongsin(dLCdash,rangeMat(2,1),rangeMat(2,2)) && gLdash >= gCdash
+        gLstr = gLdash - power(2,t);
+        gCstr = gCdash + power(2,t);
+    elseif belongsin(dLCdash,rangeMat(2,1),rangeMat(2,2)) && gLdash < gCdash
+        gLstr = gLdash + power(2,t);
+        gCstr = gCdash - power(2,t);
+    else
+        disp('Something wrong on line in gCstr , gLstr block of function');
+    end
+end
+if belongsin(dLC,rangeMat(2,1),rangeMat(2,2))
+    if belongsin(dLCdash,rangeMat(2,1),rangeMat(2,2))
+        gLstr = gLdash;
+        gCstr = gCdash;
+    elseif belongsin(dLCdash,rangeMat(1,1),rangeMat(1,2)) && gLdash >= gCdash
+        gLstr = gLdash + power(2,t);
+        gCstr = gCdash - power(2,t);
+    elseif belongsin(dLCdash,rangeMat(1,1),rangeMat(1,2)) && gLdash < gCdash
+        gLstr = gLdash - power(2,t);
+        gCstr = gCdash + power(2,t);
+    else
+        disp('Something wrong on line in gCstr , gLstr block of function');
+    end
+end
+
+if gLstr < 0 && gCstr < 0
+    gLstr = gLstr + power(2,t);
+    gCstr = gCstr + power(2,t);
+end
+if gLstr > 255 || gCstr > 255
+    gLstr = gLstr - power(2,t);
+    gCstr = gCstr - power(2,t);
+end
+
+
+end
+
+
+##### SOURCE END #####
+--></body></html>

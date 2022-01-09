@@ -23,44 +23,17 @@ dimenGrayImg = size(graysImg);
 % as Grayscale.
 % ------------------------------Quantization----
 % nonOverlappingBlockWithDiff
-blocksize = dimenGrayImg(1)*(dimenGrayImg(2)/2);
+blocksize = dimenGrayImg(1)*(round(dimenGrayImg(2)/3));
 k=1; nonOverlappingBlockWithDiff = zeros(blocksize ,5);
-for i=1:dimenGrayImg(1)
-    if mod(i,2)~=0
-        for j=1:2:dimenGrayImg(2)
-            tempi = graysImg(i,j);
-            tempip1 = graysImg(i,j+1);
-            nonOverlappingBlockWithDiff(k,1) = i;
-            nonOverlappingBlockWithDiff(k,2) = j;
-            nonOverlappingBlockWithDiff(k,3) = graysImg(i,j);
-            nonOverlappingBlockWithDiff(k,4) =  graysImg(i,j+1);            
-            if tempi > tempip1
-                nonOverlappingBlockWithDiff(k,5) = (tempi - tempip1);
-            else
-                nonOverlappingBlockWithDiff(k,5) = tempip1- tempi;
-            end
-        %       To get a absolute of the difference becoz for negative value it is
-        %       taking zero instead of any number.
-            k=k+1;
-        end
-    else
-        for j=dimenGrayImg(2):-2:1
-            tempi = graysImg(i,j);
-            tempip1 = graysImg(i,j-1);
-            nonOverlappingBlockWithDiff(k,1) = i;
-            nonOverlappingBlockWithDiff(k,2) = j;
-            nonOverlappingBlockWithDiff(k,3) = graysImg(i,j);
-            nonOverlappingBlockWithDiff(k,4) =  graysImg(i,j-1);
-            if tempi > tempip1
-                nonOverlappingBlockWithDiff(k,5) = (tempi - tempip1);
-            else
-                nonOverlappingBlockWithDiff(k,5) = tempip1- tempi;
-            end
-        %       To get a absolute of the difference becoz for negative value it is
-        %       taking zero instead of any number.
-            k=k+1;
-        end        
-    end
-end
+rangeMat = [0 31 round(log2(31-0)-2);
+    32 255 round(log2(255-32)-3)];
+% 1st 2 columns are lower and upper range, 3rd is the log calculation of
+% li-ui
+gL = graysImg(10,10);
+gC = graysImg(10,11);
+gR = graysImg(10,12);
+startptofstr = 1;
+
+[ gLstr,gCstr,gRstr ] = embeddingAlgo( gL,gC,gR,rangeMat,str2binary,startptofstr )
 
 toc
