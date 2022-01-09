@@ -29,11 +29,13 @@ rangeMat = [0 31 round(log2(31-0)-2);
     32 255 round(log2(255-32)-3)];
 % 1st 2 columns are lower and upper range, 3rd is the log calculation of
 % li-ui
-gL = graysImg(10,10);
-gC = graysImg(10,11);
-gR = graysImg(10,12);
+gL = graysImg(11,10);
+gC = graysImg(11,11);
+gR = graysImg(11,12);
+[gL,gC,gR]
 startptofstr = 1;
 
-[ gLstr,gCstr,gRstr ] = embeddingAlgo( gL,gC,gR,rangeMat,str2binary,startptofstr )
+[ gLstr,gCstr,gRstr ] = embeddingAlgo( gL,gC,gR,rangeMat,str2binary,startptofstr );
+
 
 toc
