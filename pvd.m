@@ -3,25 +3,27 @@ function [ g1Dash,g2dash ] = pvd( g1,g2,binarySecretMessage,startPt )
 %   Detailed explanation goes here
 gt1 = double(g1);
 gt2 = double(g2);
-RANGETAB = [0 7 3;
-    8 15 3;
-    16 31 4;
-    32 63 5;
-    64 127 6;
-    128 255 7];
+RANGETAB = [0,7,round(log2(7-0+1));
+    8,15,round(log2(15-8+1));
+    16, 31, round(log2(31-16+1));
+    32, 63, round(log2(63-32+1));
+    64, 127, round(log2(127-64+1));
+    128, 255, round(log2(255-128+1))];
 sze = size(RANGETAB);
 % R1=[0 7] Capacity n = 3
 d = abs(gt1-gt2);
-rangeLcurrent = -1; rangeUcurrent = -1; capNcrnt = -12;
+rangeLcurrent = -1; 
+% rangeUcurrent = -1; 
+capNcrnt = -12;
 for i = 1:sze(1)
     if belongsin(d,RANGETAB(i,1),RANGETAB(i,2))
         rangeLcurrent = RANGETAB(i,1);
-        rangeUcurrent = RANGETAB(i,2);
+%         rangeUcurrent = RANGETAB(i,2);
         capNcrnt = RANGETAB(i,3);
     end
 end
-msgPortion = pickAMsgportion (binarySecretMessage,startPt ,capNcrnt);
-decN = binaryArray2Int(msgPortion);
+ 
+decN = binaryArray2Int(pickAMsgportion (binarySecretMessage,startPt ,capNcrnt));
 dNEW = decN + rangeLcurrent;
 r = abs(dNEW - d);
 if g1 >= g2 && dNEW > d

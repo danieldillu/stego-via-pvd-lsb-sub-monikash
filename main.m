@@ -25,17 +25,20 @@ dimenGrayImg = size(graysImg);
 % nonOverlappingBlockWithDiff
 blocksize = dimenGrayImg(1)*(round(dimenGrayImg(2)/3));
 k=1; nonOverlappingBlockWithDiff = zeros(blocksize ,5);
-rangeMat = [0 31 round(log2(31-0)-2);
-    32 255 round(log2(255-32)-3)];
+% rangeMat = [0 31 round(log2(31-0)-2);
+%     32 255 round(log2(255-32)-3)];
 % 1st 2 columns are lower and upper range, 3rd is the log calculation of
 % li-ui
 gL = graysImg(11,10);
 gC = graysImg(11,11);
 gR = graysImg(11,12);
-[gL,gC,gR]
+disp('Before embedding');
+disp([gL,gC,gR]);
 startptofstr = 1;
 
-[ gLstr,gCstr,gRstr ] = embeddingAlgo( gL,gC,gR,rangeMat,str2binary,startptofstr );
+[ gLstr,gCstr,gRstr ] = embeddingAlgo( gL,gC,gR,str2binary,startptofstr );
+
+xtractedbinaryArray  = xtraction( gLstr,gCstr,gRstr);
 
 
 toc

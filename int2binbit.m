@@ -2,7 +2,7 @@ function [ binaryArray ] = int2binbit( numberinInt, numOfBits )
 % int2binbit convert the Integer in to binary array.
 %   It takes arguments as numberinInt an integer value, number of bits to
 %   pair with.
-temp = numberinInt;
+temp = double(numberinInt);
 k = 1; 
 binaryArray = zerows(numOfBits);
 while temp>0
@@ -17,6 +17,6 @@ if arrayLength < numOfBits
         binaryArray(k) = 0;
     end
 end
-
+binaryArray = flip(binaryArray);
 end
 
