@@ -1,9 +1,9 @@
-function [ gLstr,gCstr,gRstr ] = avgpvd( gLstr,gCstr,gR,str1 )
-%UNTITLED9 Summary of this function goes here
+function [ gLstr,gCstr,gRstr ] = avgpvd( gLstr,gCstr,gR,str1,startingPt )
+% avgpvd Summary of this function goes here
 %   Detailed explanation goes here
 gAVG = (gLstr + gCstr)/2;
 % % %  PVD strts
-[gAVGdASH,gRdASH] = pvd( gAVG,gR,str1 );
+[gAVGdASH,gRdASH] = pvd( gAVG,gR,str1,startingPt );
 % % %  PVD ends
 dAVG = abs(gAVG-gAVGdASH);
 gAVGstr = gAVGdASH + dAVG;

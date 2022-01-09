@@ -29,80 +29,11 @@ rangeMat = [0 31 round(log2(31-0)-2);
     32 255 round(log2(255-32)-3)];
 % 1st 2 columns are lower and upper range, 3rd is the log calculation of
 % li-ui
+gL = graysImg(10,10);
+gC = graysImg(10,11);
+gR = graysImg(10,12);
+startptofstr = 1;
 
-iter4bin = [1 1;1 1]; % to keep track of the t1 and t2 values not exceeding the actual length [L|t1 U|t1;L|t2 U|t2]
+[ gLstr,gCstr,gRstr ] = embeddingAlgo( gL,gC,gR,rangeMat,str2binary,startptofstr )
 
-for i=1:dimenGrayImg(1)
-    if mod(i,2)~=0
-        for j=2:3:(dimenGrayImg(2)-1)
-%             if iter4bin(1,2) > length(str2binary) || iter4bin(2,2) > length(str2binary)
-%                 return; %% It is related to if block below
-%             end
-            gltpix = graysImg(i,j-1);
-            gctpix = graysImg(i,j);
-            grtpix = graysImg(i,j+1);
-            nonOverlappingBlockWithDiff(k,1) = i;
-            nonOverlappingBlockWithDiff(k,2) = j;
-            nonOverlappingBlockWithDiff(k,3) = graysImg(i,j-1);
-            nonOverlappingBlockWithDiff(k,4) = graysImg(i,j);
-            nonOverlappingBlockWithDiff(k,5) = graysImg(i,j+1);
-            if gltpix > gctpix
-                nonOverlappingBlockWithDiff(k,6) = (gltpix - gctpix);
-            else
-                nonOverlappingBlockWithDiff(k,6) = gctpix- gltpix;
-            end
-            % --------------------
-            
-            diffLC = nonOverlappingBlockWithDiff(k,6);
-            if (diffLC >= rangeMat(1,1))&&(diffLC <= rangeMat(1,2)) %% 7
-                t1 = rangeMat(1,3);
-                t2 = rangeMat(1,3);
-                rmd1 = mod(gltpix,8);
-                rmd2 = mod(gctpix,8);
-                dno1 = zerows(t1);
-                dno2 = zerows(t2);
-                if iter4bin(1,2) > length(str2binary) || iter4bin(2,2) > length(str2binary)
-                    return;
-                else
-                iter4bin(1,2)= iter4bin(1,2) + t1 ; %After t1 bits.
-                iter4bin(2,2)= iter4bin(2,2) + t2 ; %After t2 bits.
-                disp(iter4bin(2,2));
-                dno1 = bi2de(str2binary(iter4bin(1,1):iter4bin(1,2))); %% Error!
-                dno2 = bi2de(str2binary(iter4bin(2,1):iter4bin(2,2))); %% Error!
-                
-                iter4bin(1,1) = iter4bin(1,2) + 1;
-                iter4bin(2,1) = iter4bin(2,2) + 1;
-                end
-            elseif (diffLC >= rangeMat(2,1))&&(diffLC <= rangeMat(2,2))  %% 35
-                t1 = rangeMat(2,3);
-                t2 = rangeMat(2,3);
-                rmd1 = mod(gltpix,16);
-                rmd2 = mod(gctpix,16);
-            else
-                disp('Na Chal raha...');
-                return;
-            end
-            
-            % -------------------------------
-            k=k+1;
-        end
-    else
-        for j=(dimenGrayImg(2)-1):-3:2
-            gltpix = graysImg(i,j+1);
-            gctpix = graysImg(i,j);
-            grtpix = graysImg(i,j-1);
-            nonOverlappingBlockWithDiff(k,1) = i;
-            nonOverlappingBlockWithDiff(k,2) = j;
-            nonOverlappingBlockWithDiff(k,3) = graysImg(i,j+1);
-            nonOverlappingBlockWithDiff(k,4) = graysImg(i,j);
-            nonOverlappingBlockWithDiff(k,5) = graysImg(i,j-1);
-            if gltpix > gctpix
-                nonOverlappingBlockWithDiff(k,6) = (gltpix - gctpix);
-            else
-                nonOverlappingBlockWithDiff(k,6) = gctpix - gltpix;
-            end
-            k=k+1;
-        end
-    end
-end
 toc

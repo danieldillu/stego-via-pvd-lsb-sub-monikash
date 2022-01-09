@@ -1,7 +1,8 @@
-function [ g1Dash,g2dash ] = pvd( g1,g2,binarySecretMessage )
-%pvd Summary of this function goes here
+function [ g1Dash,g2dash ] = pvd( g1,g2,binarySecretMessage,startPt )
+% pvd Summary of this function goes here
 %   Detailed explanation goes here
-gt1 = double(g1); gt2 = double(g2);
+gt1 = double(g1);
+gt2 = double(g2);
 RANGETAB = [0 7 3;
     8 15 3;
     16 31 4;
@@ -19,7 +20,7 @@ for i = 1:sze(1)
         capNcrnt = RANGETAB(i,3);
     end
 end
-msgPortion = pickAMsgportion (binarySecretMessage,1 ,capNcrnt);
+msgPortion = pickAMsgportion (binarySecretMessage,startPt ,capNcrnt);
 decN = binaryArray2Int(msgPortion);
 dNEW = decN + rangeLcurrent;
 r = abs(dNEW - d);
@@ -38,6 +39,7 @@ elseif g1 < g2 && dNEW <= d
 else
     disp('Check PVD function, there is something wrong here');
 end
-
+g1Dash = round(g1Dash);
+g2dash = round(g2dash);
 end
 
