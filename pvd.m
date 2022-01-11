@@ -1,4 +1,4 @@
-function [ g1Dash,g2dash ] = pvd( g1,g2,binarySecretMessage,startPt )
+function [ g1Dash,g2dash,endPt ] = pvd( g1,g2,binarySecretMessage,startPt )
 % pvd Summary of this function goes here
 %   Detailed explanation goes here
 gt1 = double(g1);
@@ -22,8 +22,8 @@ for i = 1:sze(1)
         capNcrnt = RANGETAB(i,3);
     end
 end
- 
-decN = binaryArray2Int(pickAMsgportion (binarySecretMessage,startPt ,capNcrnt));
+ [ binMsgPart,endPt ] = pickAMsgportion (binarySecretMessage,startPt ,capNcrnt);
+decN = binaryArray2Int(binMsgPart);
 dNEW = decN + rangeLcurrent;
 r = abs(dNEW - d);
 if g1 >= g2 && dNEW > d

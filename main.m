@@ -5,8 +5,9 @@ PRootURL = 'C:\Users\danie\OneDrive\Documents\DIP Projects Others\Monika Sharma 
 ImageDirURL = 'C:\Users\danie\OneDrive\Documents\DIP Projects Others\Monika Sharma DIP Project\algo\test image set\DIP3E_Original_Images_CH06\';
 ImageURL = strcat(ImageDirURL,'Fig0631(a)(strawberries_coffee_full_color).tif');
 img = imread(ImageURL);
-stegoText = 'This is a test image';
-str2binary = charStringtoBin (stegoText);
+% stegoText = 'A';
+% str2binary = charStringtoBin (stegoText);
+
 % Actual conversion from decimal ASCII values of chars of string to binary
 img2reduced = imresize(img, [567, 680]);
 % Larger image is resized to a 567 x 680, why? No reasons.
@@ -29,16 +30,30 @@ k=1; nonOverlappingBlockWithDiff = zeros(blocksize ,5);
 %     32 255 round(log2(255-32)-3)];
 % 1st 2 columns are lower and upper range, 3rd is the log calculation of
 % li-ui
-gL = graysImg(11,10);
-gC = graysImg(11,11);
-gR = graysImg(11,12);
+% gL = graysImg(12,10);
+% gC = graysImg(12,12);
+% gR = graysImg(12,14);
+
+gL = 127;
+gC = 125;
+gR = 123;
+
+str2binary = [1 1 0 0 1 0 0 1 1];
 disp('Before embedding');
 disp([gL,gC,gR]);
+disp('Message bits');
+disp(str2binary);
 startptofstr = 1;
 
-[ gLstr,gCstr,gRstr ] = embeddingAlgo( gL,gC,gR,str2binary,startptofstr );
-
+[ gLstr,gCstr,gRstr, endpt ] = embeddingAlgo( gL,gC,gR,str2binary,startptofstr );
+disp('After Embedding:');
+disp([ gLstr,gCstr,gRstr,endpt ]);
+gLstr = 126;
+gCstr = 122; 
+gRstr = 127;
 xtractedbinaryArray  = xtraction( gLstr,gCstr,gRstr);
+disp('Extracted Bits:');
+disp(xtractedbinaryArray);
 
 
 toc
