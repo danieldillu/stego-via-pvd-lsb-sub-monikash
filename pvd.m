@@ -27,21 +27,21 @@ decN = binaryArray2Int(binMsgPart);
 dNEW = decN + rangeLcurrent;
 r = abs(dNEW - d);
 if g1 >= g2 && dNEW > d
-    g1Dash = g1 + (r/2);
-    g2dash = g2 - (r/2);
+    g1Dash = g1 + ceil(r/2);
+    g2dash = g2 - floor(r/2);
 elseif g1 < g2 && dNEW > d
-    g1Dash = g1 - (r/2);
-    g2dash = g2 + (r/2);
+    g1Dash = g1 - floor(r/2);
+    g2dash = g2 + ceil(r/2);
 elseif g1 >= g2 && dNEW <= d
-    g1Dash = g1 - (r/2);
-    g2dash = g2 + (r/2);
+    g1Dash = g1 - ceil(r/2);
+    g2dash = g2 + floor(r/2);
 elseif g1 < g2 && dNEW <= d
-    g1Dash = g1 + (r/2);
-    g2dash = g2 - (r/2);
+    g1Dash = g1 + ceil(r/2);
+    g2dash = g2 - floor(r/2);
 else
     disp('Check PVD function, there is something wrong here');
 end
-g1Dash = round(g1Dash);
-g2dash = round(g2dash);
+% g1Dash = g1Dash;
+% g2dash = g2dash;
 end
 

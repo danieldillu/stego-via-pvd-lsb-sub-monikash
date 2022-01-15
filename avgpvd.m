@@ -1,7 +1,7 @@
 function [ gLstr,gCstr,gRstr,endPt,gAVGstr] = avgpvd( gLstr,gCstr,gR,str1,startingPt )
 % avgpvd Summary of this function goes here
 %   Detailed explanation goes here
-gAVG = (gLstr+gCstr)/2;
+gAVG = floor((gLstr+gCstr)/2);
 % % %  PVD strts
 [gAVGdASH,gRdASH,endPt] = pvd( gAVG,gR,str1,startingPt );
 disp([gAVGdASH,gRdASH,endPt]);
