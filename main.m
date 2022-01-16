@@ -1,56 +1,90 @@
 clc;
-clear all;
 tic
-PRootURL = 'C:\Users\danie\OneDrive\Documents\DIP Projects Others\Monika Sharma DIP Project\algo';
-ImageDirURL = 'C:\Users\danie\OneDrive\Documents\DIP Projects Others\Monika Sharma DIP Project\algo\test image set\DIP3E_Original_Images_CH06\';
-ImageURL = strcat(ImageDirURL,'Fig0631(a)(strawberries_coffee_full_color).tif');
-img = imread(ImageURL);
-% stegoText = 'A';
-% str2binary = charStringtoBin (stegoText);
+initb4xecn;
+disp('Stego Embedding Process:');
+disp('_______________________________________________________________________');
+stegoText = 'Hi';
+pk = 1;
+% =======================================================
 
-% Actual conversion from decimal ASCII values of chars of string to binary
-img2reduced = imresize(img, [567, 680]);
-% Larger image is resized to a 567 x 680, why? No reasons.
-[rows, columns, NoOfchannels] = size(img2reduced);
-% To get the dimensions of the image, NoOfchannels is used to fined if is a
-% grayscale.
-if(NoOfchannels == 3)
-    graysImg = rgb2gray(img2reduced);
-else
-    graysImg = img2reduced;
+for findex=3:size(ImageSetFolder,1)
+    fprintf('%d. Processing: %s\n',findex-2,ImageSetFolder(findex).name);
+    [hpathstr,hname,hext] = fileparts(ImageSetFolder(findex).name);
+    coverImgUrl=strcat(ImageSetDirURL,'\',ImageSetFolder(findex).name);
+    disp(strcat('   -Host Image: <a href="matlab:winopen(''',coverImgUrl,''')" > ',ImageSetFolder(findex).name,'</a>'));
+    OutputImageFilepath = strcat('temp\OUTPUT TIFF\',hname,'.tif');
+    coverImage = imread(coverImgUrl);
+    
+    img2reduced = imresize(coverImage, 0.50);
+    modifiedImage = img2reduced;
+    [rows, columns, NoOfchannels] = size(img2reduced);
+    dimenGrayImg = [rows, columns];
+    
+    str2binary = [1 0 1 0 1 0 0 1 1];
+    startptofstr = 1;
+    
+    for i=1:dimenGrayImg(1)
+        %     disp('--------------');
+        if mod(i,2)~=0
+            for j=3:5:(dimenGrayImg(2)-2)
+                
+                %             disp([i,j]);
+                p1 = img2reduced (i,j-2,3);
+                p2 = img2reduced (i,j-1,3);
+                p3 = img2reduced (i,j,3);
+                p4 = img2reduced (i,j+1,2);
+                p5 = img2reduced (i,j+2,2);
+                %             disp([p1,p2,p3,p4,p5]);
+                [ p1str,p2str,p3str, endpt ] = embeddingAlgo( p1,p2,p3,str2binary,startptofstr );
+                startptofstr = endpt + 1;
+                [ p4str,p5str,endpt ] = pvd( p4,p5,str2binary,startptofstr );
+                startptofstr = endpt + 1;
+                modifiedImage (i,j-2,3) = p1str;
+                modifiedImage (i,j-1,3) = p2str;
+                modifiedImage (i,j,3) = p3str;
+                modifiedImage (i,j+1,2) = p4str;
+                modifiedImage (i,j+2,2) = p5str;
+                %             disp('________________');
+            end
+        else
+            for j=(dimenGrayImg(2)-2):-5:3
+                %             disp([i,j]);
+                p1 = img2reduced (i,j+2,3);
+                p2 = img2reduced (i,j+1,3);
+                p3 = img2reduced (i,j,3);
+                p4 = img2reduced (i,j-1,2);
+                p5 = img2reduced (i,j-2,2);
+                %             disp([p1,p2,p3,p4,p5]);
+                [ p1str,p2str,p3str, endpt ] = embeddingAlgo( p1,p2,p3,str2binary,startptofstr );
+                startptofstr = endpt + 1;
+                [ p4str,p5str,endpt ] = pvd( p4,p5,str2binary,startptofstr );
+                startptofstr = endpt + 1;
+                modifiedImage (i,j+2,3) = p1str;
+                modifiedImage (i,j+1,3) = p2str;
+                modifiedImage (i,j,3) = p3str;
+                modifiedImage (i,j-1,2) = p4str;
+                modifiedImage (i,j-2,2) = p5str;
+                %             disp('________________');
+            end
+        end
+    end
+    
+    peaksnr(pk,1) = findex-2;
+    [peaksnr(pk,2),~]=psnr(double(img2reduced),double(modifiedImage),255);
+    [ fobp,capacity,bpp ] = measureParamters( img2reduced, modifiedImage );
+    peaksnr(pk,3) = fobp;
+    fprintf('   -For %s PSNR = %.4f, FOBP = %.4f \n',OutputImageFilepath,peaksnr(pk,2),peaksnr(pk,3));
+    imwrite(modifiedImage,OutputImageFilepath);
+    pk = pk + 1;
+    
+    disp('_______________________________________________________________________');
 end
-dimenGrayImg = size(graysImg);
-% If it a RGB image it is converted to Grayscale image, else it is assigned
-% as Grayscale.
-% ------------------------------Quantization----
-% nonOverlappingBlockWithDiff
-blocksize = dimenGrayImg(1)*(round(dimenGrayImg(2)/3));
-k=1; nonOverlappingBlockWithDiff = zeros(blocksize ,5);
-% rangeMat = [0 31 round(log2(31-0)-2);
-%     32 255 round(log2(255-32)-3)];
-% 1st 2 columns are lower and upper range, 3rd is the log calculation of
-% li-ui
-% gL = graysImg(12,10);
-% gC = graysImg(12,12);
-% gR = graysImg(12,14);
 
-gL = 127;
-gC = 125;
-gR = 123;
+clear p1 p2 p3 p4 p5 p1str p2str p3str p4str p5str pk i j;
 
-str2binary = [1 1 0 0 1 0 0 1 1];
-disp('Before embedding');
-disp([gL,gC,gR]);
-disp('Message bits');
-disp(str2binary);
-startptofstr = 1;
-
-[ gLstr,gCstr,gRstr, endpt ] = embeddingAlgo( gL,gC,gR,str2binary,startptofstr );
-disp('After Embedding:');
-disp([ gLstr,gCstr,gRstr,endpt ]);
-xtractedbinaryArray  = xtraction( gLstr,gCstr,gRstr);
-disp('Extracted Bits:');
-disp(xtractedbinaryArray);
+xlswrite(strcat(EXCELDIR,'\Steganography Results.xlsx'), peaksnr);
+disp('  PSNR Report File of Watermarked Images: <a href="matlab:winopen(strcat(EXCELDIR,''\Steganography Results.xlsx''))">Steganography Results.xlsx</a>');
 
 
-toc
+% =======================================================
+toc;
