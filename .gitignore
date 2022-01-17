@@ -1,7 +1,7 @@
 /*.log
 /*.asv
 main.asv
-temp\EXCEL\*.xlsx
+temp\EXCEL\
 temp\OUTPUT TIFF\
 temp\transImage\
 TestingArea.m
