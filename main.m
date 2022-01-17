@@ -3,7 +3,8 @@ tic
 initb4xecn;
 disp('Stego Embedding Process:');
 disp('_______________________________________________________________________');
-stegoText = 'Hi';
+stegoText = 'Hello!';
+str2binary = charStringtoBin(stegoText);
 pk = 1;
 % =======================================================
 
@@ -20,7 +21,7 @@ for findex=3:size(ImageSetFolder,1)
     [rows, columns, NoOfchannels] = size(img2reduced);
     dimenGrayImg = [rows, columns];
     
-    str2binary = [1 0 1 0 1 0 0 1 1];
+%     str2binary = [1 0 1 0 1 0 0 1 1];
     startptofstr = 1;
     
     for i=1:dimenGrayImg(1)
@@ -73,7 +74,8 @@ for findex=3:size(ImageSetFolder,1)
     [peaksnr(pk,2),~]=psnr(double(img2reduced),double(modifiedImage),255);
     [ fobp,capacity,bpp ] = measureParamters( img2reduced, modifiedImage );
     peaksnr(pk,3) = fobp;
-    fprintf('   -For %s PSNR = %.4f, FOBP = %.4f \n',OutputImageFilepath,peaksnr(pk,2),peaksnr(pk,3));
+    disp(strcat('   -Stego-Image: <a href="matlab:winopen(''',OutputImageFilepath,''')" > ',ImageSetFolder(findex).name,'</a>'));
+    fprintf('   -For %s PSNR = %.4f, FOBP = %.4f \n',ImageSetFolder(findex).name,peaksnr(pk,2),peaksnr(pk,3));
     imwrite(modifiedImage,OutputImageFilepath);
     pk = pk + 1;
     
