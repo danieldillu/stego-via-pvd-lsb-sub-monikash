@@ -30,11 +30,11 @@ for findex=3:size(ImageSetFolder,1)
             for j=3:5:(dimenGrayImg(2)-2)
                 
                 %             disp([i,j]);
-                p1 = img2reduced (i,j-2,3);
+                 p1 = img2reduced (i,j-2,3);
                 p2 = img2reduced (i,j-1,3);
                 p3 = img2reduced (i,j,3);
                 p4 = img2reduced (i,j+1,2);
-                p5 = img2reduced (i,j+2,2);
+                p5 = img2reduced(i,j+2,2);
                 %             disp([p1,p2,p3,p4,p5]);
                 [ p1str,p2str,p3str, endpt ] = embeddingAlgo( p1,p2,p3,str2binary,startptofstr );
                 startptofstr = endpt + 1;
