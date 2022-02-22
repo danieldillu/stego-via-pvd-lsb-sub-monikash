@@ -18,13 +18,20 @@ else
 end
 %  Images After embedding
 
-if exist('temp\EXCEL','dir')==7
-	EXCELDIR = 'temp\EXCEL';
+if exist('temp\OUTPUT TIFF\EXCEL','dir')==7
+	EXCELDIR = 'temp\OUTPUT TIFF\EXCEL';
 else
-   mkdir( 'temp\EXCEL');
-   EXCELDIR = 'temp\EXCEL';
+   mkdir( 'temp\OUTPUT TIFF\EXCEL');
+   EXCELDIR = 'temp\OUTPUT TIFF\EXCEL';
 end
 %  Excel Sheets After embedding result.
 
+if exist('temp\OUTPUT TIFF\Histogram','dir')==7
+	HISTODIR = 'temp\OUTPUT TIFF\Histogram\';
+else
+   mkdir( 'temp\OUTPUT TIFF\Histogram');
+   HISTODIR = 'temp\OUTPUT TIFF\Histogram\';
+end
+% Histogram before and after stego.
 
 ImageSetFolder = dir(ImageSetDirURL);

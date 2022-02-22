@@ -1,4 +1,4 @@
-function [ gLstr,gCstr,gRstr,endpt ] = embeddingAlgo( gL,gC,gR,str2binary,startptofstr )
+function [ gLstr,gCstr,gRstr,endPt ] = embeddingAlgo( gL,gC,gR,str2binary,startptofstr )
 % embeddingAlgo Summary of this function goes here
 %   Arguments are : gL,gC,gR are 3 pixels needed to modify.
 %   rangeMat, range matrix used in the matrix.
@@ -14,7 +14,7 @@ rangeMat = [0 31 round(log2(31-0)-2);
 % PDMO apply Pixel Differencing Modulo Operation, basically differencing
 % and then modulo.
 % disp([ gLstr,gCstr,gR,endpt ]);
-[ gLstr,gCstr,gRstr,endPt,avgstr ] = avgpvd( gLstr,gCstr,gR,str2binary,endpt+1 );
+[ gLstr,gCstr,gRstr,endPt,~ ] = avgpvd( gLstr,gCstr,gR,str2binary,endpt+1 );
 % disp('After APVD');
 % disp([ gLstr,gCstr,gRstr,endPt, avgstr] );
 % APVD apply Average PVD, on top of it for adjustment it uses PVD.

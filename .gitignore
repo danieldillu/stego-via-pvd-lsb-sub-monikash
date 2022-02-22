@@ -4,5 +4,8 @@ main.asv
 temp\EXCEL\
 temp\OUTPUT TIFF\
 temp\transImage\
+temp\OUTPUT TIFF\EXCEL\
+temp\OUTPUT TIFF\Histogram\
+temp\OUTPUT TIFF\StegoImages\
 TestingArea.m
 executionSec.m

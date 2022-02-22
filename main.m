@@ -13,7 +13,7 @@ for findex=3:size(ImageSetFolder,1)
     [hpathstr,hname,hext] = fileparts(ImageSetFolder(findex).name);
     coverImgUrl=strcat(ImageSetDirURL,'\',ImageSetFolder(findex).name);
     disp(strcat('   -Host Image: <a href="matlab:winopen(''',coverImgUrl,''')" > ',ImageSetFolder(findex).name,'</a>'));
-    OutputImageFilepath = strcat('temp\OUTPUT TIFF\',hname,'.tif');
+    OutputImageFilepath = strcat('temp\OUTPUT TIFF\StegoImages\',hname,'.tif');
     coverImage = imread(coverImgUrl);
     
     img2reduced = imresize(coverImage, 0.50);
@@ -21,7 +21,7 @@ for findex=3:size(ImageSetFolder,1)
     [rows, columns, NoOfchannels] = size(img2reduced);
     dimenGrayImg = [rows, columns];
     
-%     str2binary = [1 0 1 0 1 0 0 1 1];
+    %     str2binary = [1 0 1 0 1 0 0 1 1];
     startptofstr = 1;
     
     for i=1:dimenGrayImg(1)
@@ -30,7 +30,7 @@ for findex=3:size(ImageSetFolder,1)
             for j=3:5:(dimenGrayImg(2)-2)
                 
                 %             disp([i,j]);
-                 p1 = img2reduced (i,j-2,3);
+                p1 = img2reduced (i,j-2,3);
                 p2 = img2reduced (i,j-1,3);
                 p3 = img2reduced (i,j,3);
                 p4 = img2reduced (i,j+1,2);
@@ -38,7 +38,10 @@ for findex=3:size(ImageSetFolder,1)
                 %             disp([p1,p2,p3,p4,p5]);
                 [ p1str,p2str,p3str, endpt ] = embeddingAlgo( p1,p2,p3,str2binary,startptofstr );
                 startptofstr = endpt + 1;
-                [ p4str,p5str,endpt ] = pvd( p4,p5,str2binary,startptofstr );
+                [ p4str1,p5str1,endpt ] = pvd( p4,p5,str2binary,startptofstr );
+                %                 [ p4str,p5str ] = fixOverFlowUnderflows( p4str1,p5str1 );
+                p4str = p4str1;
+                p5str = p5str1;
                 startptofstr = endpt + 1;
                 modifiedImage (i,j-2,3) = p1str;
                 modifiedImage (i,j-1,3) = p2str;
@@ -58,7 +61,10 @@ for findex=3:size(ImageSetFolder,1)
                 %             disp([p1,p2,p3,p4,p5]);
                 [ p1str,p2str,p3str, endpt ] = embeddingAlgo( p1,p2,p3,str2binary,startptofstr );
                 startptofstr = endpt + 1;
-                [ p4str,p5str,endpt ] = pvd( p4,p5,str2binary,startptofstr );
+                [ p4str1,p5str1,endpt ] = pvd( p4,p5,str2binary,startptofstr );
+                %                 [ p4str,p5str ] = fixOverFlowUnderflows( p4str1,p5str1 );
+                p4str = p4str1;
+                p5str = p5str1;
                 startptofstr = endpt + 1;
                 modifiedImage (i,j+2,3) = p1str;
                 modifiedImage (i,j+1,3) = p2str;
@@ -76,6 +82,18 @@ for findex=3:size(ImageSetFolder,1)
     peaksnr(pk,3) = fobp;
     disp(strcat('   -Stego-Image: <a href="matlab:winopen(''',OutputImageFilepath,''')" > ',ImageSetFolder(findex).name,'</a>'));
     fprintf('   -For %s PSNR = %.4f, FOBP = %.4f \n',ImageSetFolder(findex).name,peaksnr(pk,2),peaksnr(pk,3));
+    %% Histograms
+    % %     Before Steganography.
+    imagePath = strcat(HISTODIR,'B4Steg-',ImageSetFolder(findex).name);
+    imhist(rgb2gray(img2reduced));
+    saveas(gcf, imagePath);
+    disp(strcat('   Histogram b4 Stego: <a href="matlab:winopen(''',imagePath,''')" > B4Steg-',ImageSetFolder(findex).name,'</a>'));
+    % %     After Steganography.
+    imagePath = strcat(HISTODIR,'Stego-',ImageSetFolder(findex).name);
+    imhist(rgb2gray(modifiedImage));
+    saveas(gcf, imagePath);
+    disp(strcat('   Histogram After Stego: <a href="matlab:winopen(''',imagePath,''')" > Stego-',ImageSetFolder(findex).name,'</a>'));
+    
     imwrite(modifiedImage,OutputImageFilepath);
     pk = pk + 1;
     
