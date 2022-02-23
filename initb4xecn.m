@@ -26,6 +26,15 @@ else
 end
 %  Excel Sheets After embedding result.
 
+if exist('temp\OUTPUT TIFF\StegoImages','dir')==7
+	StegoDir = 'temp\OUTPUT TIFF\StegoImages\';
+else
+   mkdir( 'temp\OUTPUT TIFF\StegoImages');
+   StegoDir = 'temp\OUTPUT TIFF\StegoImages\';
+end
+
+% Stego Images
+
 if exist('temp\OUTPUT TIFF\Histogram','dir')==7
 	HISTODIR = 'temp\OUTPUT TIFF\Histogram\';
 else

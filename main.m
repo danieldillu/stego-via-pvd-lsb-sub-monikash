@@ -6,14 +6,14 @@ disp('_______________________________________________________________________');
 stegoText = 'Hello!';
 str2binary = charStringtoBin(stegoText);
 pk = 1;
-% =======================================================
+%% =======================================================
 
 for findex=3:size(ImageSetFolder,1)
     fprintf('%d. Processing: %s\n',findex-2,ImageSetFolder(findex).name);
     [hpathstr,hname,hext] = fileparts(ImageSetFolder(findex).name);
     coverImgUrl=strcat(ImageSetDirURL,'\',ImageSetFolder(findex).name);
-    disp(strcat('   -Host Image: <a href="matlab:winopen(''',coverImgUrl,''')" > ',ImageSetFolder(findex).name,'</a>'));
-    OutputImageFilepath = strcat('temp\OUTPUT TIFF\StegoImages\',hname,'.tif');
+    disp(strcat('   Host Image: <a href="matlab:winopen(''',coverImgUrl,''')" > ',ImageSetFolder(findex).name,'</a>'));
+    OutputImageFilepath = strcat(StegoDir,hname,'.tif');
     coverImage = imread(coverImgUrl);
     
     img2reduced = imresize(coverImage, 0.50);
@@ -80,19 +80,24 @@ for findex=3:size(ImageSetFolder,1)
     [peaksnr(pk,2),~]=psnr(double(img2reduced),double(modifiedImage),255);
     [ fobp,capacity,bpp ] = measureParamters( img2reduced, modifiedImage );
     peaksnr(pk,3) = fobp;
-    disp(strcat('   -Stego-Image: <a href="matlab:winopen(''',OutputImageFilepath,''')" > ',ImageSetFolder(findex).name,'</a>'));
-    fprintf('   -For %s PSNR = %.4f, FOBP = %.4f \n',ImageSetFolder(findex).name,peaksnr(pk,2),peaksnr(pk,3));
+    
     %% Histograms
     % %     Before Steganography.
     imagePath = strcat(HISTODIR,'B4Steg-',ImageSetFolder(findex).name);
     imhist(rgb2gray(img2reduced));
     saveas(gcf, imagePath);
     disp(strcat('   Histogram b4 Stego: <a href="matlab:winopen(''',imagePath,''')" > B4Steg-',ImageSetFolder(findex).name,'</a>'));
-    % %     After Steganography.
+   
+    %% Steganography, after process.
+    disp(strcat('   Stego-Image: <a href="matlab:winopen(''',OutputImageFilepath,''')" > ',ImageSetFolder(findex).name,'</a>'));
+    
+     % %     After Steganography.
     imagePath = strcat(HISTODIR,'Stego-',ImageSetFolder(findex).name);
     imhist(rgb2gray(modifiedImage));
     saveas(gcf, imagePath);
     disp(strcat('   Histogram After Stego: <a href="matlab:winopen(''',imagePath,''')" > Stego-',ImageSetFolder(findex).name,'</a>'));
+    % Results: PSNR, FOBP
+    fprintf('   For %s PSNR = %.4f, FOBP = %.4f \n',ImageSetFolder(findex).name,peaksnr(pk,2),peaksnr(pk,3));
     
     imwrite(modifiedImage,OutputImageFilepath);
     pk = pk + 1;
@@ -101,7 +106,7 @@ for findex=3:size(ImageSetFolder,1)
 end
 
 clear p1 p2 p3 p4 p5 p1str p2str p3str p4str p5str pk i j;
-
+%% Excel report of Steganographic results.
 xlswrite(strcat(EXCELDIR,'\Steganography Results.xlsx'), peaksnr);
 disp('  PSNR Report File of Watermarked Images: <a href="matlab:winopen(strcat(EXCELDIR,''\Steganography Results.xlsx''))">Steganography Results.xlsx</a>');
 
