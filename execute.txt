@@ -1,0 +1,37 @@
+Embedding Process:
+1. [127, 125, 123, 80, 118]
+2. [11001001111111]
+3. d12 = 2
+4. t = 3; n1 = 3; n2 = 3; 
+5. rmd1 = 7; rmd2 = 5;
+6. n1 = 6; n2 = 2;
+7. dv1 = 1; dv2 = -1;dv3 = 3;dv4 = -3;
+8. p1' = 126; p2' = 122;
+9. d12 = 4;
+10. p1* = 126; p2* = 122;
+11. pavg* = 124;
+12. p3 = 123;
+13. After APVD, 126, 122, 127
+14. [p1*, p2*, p3*] = [126,122,127]
+15. PVD on 80,118
+16. d = 38, Lj = 32, Uj = 63
+17. n = 5
+18. dnew = 63
+19. decn = 31; Lj = 32;
+20. r = 25
+21. p4* = 68; p5* = 131;
+
+Extraction Process:
+1. stego-pixel : 126, 122, 127, 68, 118; Taking 126, 122, 127
+2. ds = 4
+3. rmd1*  = 6; rmd2* = 2
+4. ds in R1 so, represent rmd1 and rmd2 in 3 bit 
+5. extracted bits = 110010
+6. pavg* = 124,
+7. On reverse APVD,pavg*, p3* we get 011;
+8. concate 110010 and 011 -> 110010011
+9. Stego pixel: 68, 118
+10. ds = 63 
+11. s = 31
+12. s -> in 5 bits 
+13. (31)2 -> 11111
